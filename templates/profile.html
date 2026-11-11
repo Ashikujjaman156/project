@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% block title %}Profile{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>Your profile</h1><p>{{ current_user.name }}, {{ current_user.roll_no }}. Keep your CGPA current: it decides which jobs you can apply to.</p></div></section>{% endblock %}
+{% block content %}
+<div class="narrow">
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="two">
+    <label>CGPA <input type="number" name="cgpa" step="0.01" min="0" max="10" value="{{ current_user.cgpa }}" required></label>
+    <label>Department <input name="department" value="{{ current_user.department }}"></label>
+  </div>
+  <label>Phone <input name="phone" value="{{ current_user.phone or '' }}"></label>
+  <label>Resume link <input type="url" name="resume_link" placeholder="https://drive.google.com/..." value="{{ current_user.resume_link or '' }}"></label>
+  <button class="btn" type="submit">Save profile</button>
+</form>
+</div>
+{% endblock %}

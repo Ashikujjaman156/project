@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block shell %}
+<section class="stage">
+  {% include "_scene.html" %}
+  <div class="stage-copy">
+    <h1>Every window<br>is an offer.</h1>
+    <p class="lead">Apply only to jobs you qualify for, and watch each application move from applied to selected.</p>
+    <p class="cta">
+      {% if current_user.is_authenticated %}
+        <a class="btn big" href="{{ url_for('main.jobs') }}">Browse open jobs</a>
+      {% else %}
+        <a class="btn big" href="{{ url_for('main.register') }}">Create student account</a>
+        <a class="btn big ghost-light" href="{{ url_for('main.login') }}">Log in</a>
+      {% endif %}
+    </p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="stats">
+    <div><b data-count="{{ stats.jobs }}">{{ stats.jobs }}</b>open jobs</div>
+    <div><b data-count="{{ stats.companies }}">{{ stats.companies }}</b>partner companies</div>
+    <div><b data-count="{{ stats.students }}">{{ stats.students }}</b>registered students</div>
+    <div><b data-count="{{ stats.placed }}">{{ stats.placed }}</b>students placed</div>
+  </div>
+</section>
+
+<section class="section openings">
+  <h2 class="big reveal">Newly opened</h2>
+  <div class="olist">
+  {% for j in latest %}
+    <a class="orow reveal" href="{{ url_for('main.job_detail', job_id=j.id) }}">
+      <span class="otitle">{{ j.title }}</span>
+      <span class="ocompany">{{ j.company.name }}, {{ j.location }}</span>
+      <span class="opkg">{{ j.package_lpa }} LPA</span>
+      <span class="oclose">Closes {{ j.deadline.strftime('%d %b') }}</span>
+    </a>
+  {% else %}<p class="empty">No jobs are open right now. Check back soon.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="section process">
+  <h2 class="big reveal">How a window lights up</h2>
+  <ol class="steps">
+    <li><h3>Apply</h3><p>Jobs show the CGPA they need, and you can only apply when you meet it, so every application counts.</p></li>
+    <li><h3>Get shortlisted</h3><p>The placement cell reviews your profile and moves strong applications forward.</p></li>
+    <li><h3>Get selected</h3><p>Your dashboard shows the outcome the moment the cell records it.</p></li>
+  </ol>
+</section>
+
+<section class="section assistant" id="assistant">
+  <div class="assistant-copy">
+    <h2 class="big reveal">Ask before you apply.</h2>
+    <p class="note">Not sure which job fits your CGPA, or how to prepare? Chat with the placement assistant. It knows the open jobs, and once you log in it knows your profile too.</p>
+  </div>
+  {% include "_chat.html" %}
+</section>
+
+<section class="section team" id="team">
+  <div class="team-intro">
+    <h2 class="big reveal">Four students, one system.</h2>
+    <p class="note reveal">We are students of the University of Information Technology &amp; Sciences. We took a requirements document and turned it into a working placement system. We planned the data together, wrote and tested the code side by side, and kept refining the design until it felt right. Every fix and every small decision was shared between us. We’re proud of what we built, and we hope it makes campus hiring simpler for students and the placement cell.</p>
+    <img class="uni reveal" src="{{ url_for('static', filename='uits-logo.png') }}" width="376" height="94" alt="University of Information Technology &amp; Sciences (UITS)" loading="lazy">
+  </div>
+  <div class="team-list">
+    <h3 class="reveal">Submitted by</h3>
+    <ul>
+      <li class="reveal"><span class="mname">Ashikujjaman Sifat</span><span class="mid">04324205101156</span></li>
+      <li class="reveal"><span class="mname">Nehan Ahamed Niloy</span><span class="mid">04324205101158</span></li>
+      <li class="reveal"><span class="mname">Anannya Islam</span><span class="mid">04324205101161</span></li>
+      <li class="reveal"><span class="mname">Turjoy Saha</span><span class="mid">04324205101163</span></li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}{% block title %}{{ job.title }}{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>{{ job.title }}</h1><p>{{ job.company.name }}</p></div></section>{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('main.jobs') }}">Back to jobs</a>
+{% if job.company.website %}<p class="muted"><a href="{{ job.company.website }}" rel="noopener" target="_blank">Visit the {{ job.company.name }} website</a></p>{% endif %}
+<dl class="facts">
+  <div><dt>Package</dt><dd>{{ job.package_lpa }} LPA</dd></div>
+  <div><dt>Location</dt><dd>{{ job.location or 'Not specified' }}</dd></div>
+  <div><dt>Minimum CGPA</dt><dd>{{ '%.2f'|format(job.eligibility_cgpa) }}</dd></div>
+  <div><dt>Apply by</dt><dd>{{ job.deadline.strftime('%d %B %Y') }}</dd></div>
+</dl>
+<div class="prose">{{ job.description or 'No description provided.' }}</div>
+{% if job.company.description %}<h2>About {{ job.company.name }}</h2><div class="prose">{{ job.company.description }}</div>{% endif %}
+<div class="actionbar">
+{% if current_user.is_admin %}
+  <a class="btn" href="{{ url_for('main.applicants', job_id=job.id) }}">View applicants</a>
+{% elif application %}
+  <span>Your application: <span class="badge {{ application.status|lower }}">{{ application.status }}</span></span>
+{% elif not job.is_open %}
+  <p class="muted">Applications closed on {{ job.deadline.strftime('%d %b %Y') }}.</p>
+{% elif not eligible %}
+  <p class="muted">You need a CGPA of {{ '%.2f'|format(job.eligibility_cgpa) }}. Yours is {{ '%.2f'|format(current_user.cgpa or 0) }}. <a href="{{ url_for('main.profile') }}">Update your CGPA</a> if it has changed.</p>
+{% else %}
+  <form method="post" action="{{ url_for('main.apply', job_id=job.id) }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="btn" type="submit">Apply to this job</button>
+  </form>
+{% endif %}
+</div>
+{% endblock %}

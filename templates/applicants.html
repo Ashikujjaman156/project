@@ -1,0 +1,38 @@
+{% extends "base.html" %}{% block title %}Applicants{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>{{ job.title }}</h1><p>{{ job.company.name }}, {{ job.applications|length }} applicants</p></div></section>{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('main.admin_dashboard') }}">Back to admin</a>
+<div class="actionbar top-actions">
+  <span class="chips">
+    <a class="{{ 'on' if not status }}" href="{{ url_for('main.applicants', job_id=job.id) }}">All</a>
+    {% for s in STATUSES %}<a class="{{ 'on' if status == s }}" href="{{ url_for('main.applicants', job_id=job.id, status=s) }}">{{ s }}</a>{% endfor %}
+  </span>
+  <a class="btn small ghost" href="{{ url_for('main.export_applicants', job_id=job.id) }}">Export CSV</a>
+</div>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>Student</th><th>Dept</th><th>CGPA</th><th>Contact</th><th>Resume</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for a in apps %}
+    <tr>
+      <td><strong>{{ a.student.name }}</strong><br><small>{{ a.student.roll_no }}</small></td>
+      <td>{{ a.student.department }}</td>
+      <td>{{ '%.2f'|format(a.student.cgpa or 0) }}</td>
+      <td><small>{{ a.student.email }}<br>{{ a.student.phone or '' }}</small></td>
+      <td>{% if a.student.resume_link %}<a href="{{ a.student.resume_link }}" target="_blank" rel="noopener">Open</a>{% else %}<span class="muted">None</span>{% endif %}</td>
+      <td>
+        <form method="post" action="{{ url_for('main.update_status', app_id=a.id) }}" class="statusform">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <select name="status" aria-label="Status for {{ a.student.name }}">
+            {% for s in STATUSES %}<option {{ 'selected' if a.status == s }}>{{ s }}</option>{% endfor %}
+          </select>
+          <button class="btn small" type="submit">Save</button>
+        </form>
+      </td>
+    </tr>
+  {% else %}<tr><td colspan="6" class="empty">No applicants{% if status %} with status {{ status|lower }}{% endif %} yet.</td></tr>{% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

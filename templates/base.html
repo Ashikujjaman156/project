@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f0e2e">
+<title>{% block title %}Placement Cell{% endblock %} | University Placement System</title>
+<script>document.documentElement.classList.add('js')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="{% block bodyclass %}{% endblock %}">
+<header class="top">
+  <a class="brand" href="{{ url_for('main.index') }}"><span class="dot"></span>Placement Cell</a>
+  <nav>
+    <a href="{{ url_for('main.assistant_page') }}">Assistant</a>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('main.jobs') }}">Jobs</a>
+      {% if current_user.is_admin %}
+        <a href="{{ url_for('main.admin_dashboard') }}">Admin</a>
+      {% else %}
+        <a href="{{ url_for('main.dashboard') }}">My applications</a>
+        <a href="{{ url_for('main.profile') }}">Profile</a>
+      {% endif %}
+      <form method="post" action="{{ url_for('main.logout') }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="link" type="submit">Log out</button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('main.login') }}">Log in</a>
+      <a class="btn small" href="{{ url_for('main.register') }}">Create account</a>
+    {% endif %}
+  </nav>
+</header>
+<div class="flashes" aria-live="polite">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in msgs %}<div class="flash {{ cat }}" role="status">{{ msg }}</div>{% endfor %}
+  {% endwith %}
+</div>
+{% block pagehead %}{% endblock %}
+{% block shell %}<main>{% block content %}{% endblock %}</main>{% endblock %}
+<footer class="foot">
+  <div class="word" aria-hidden="true">Placement Cell</div>
+  <p>University Placement System. Every offer, one shortlist at a time.</p>
+</footer>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>

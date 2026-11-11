@@ -1,0 +1,32 @@
+{# Animated campus at dusk: each lit window is a placement. Pure SVG + CSS, no image files. #}
+<div class="stars" aria-hidden="true"
+  style="box-shadow:{% for i in range(45) %}{{ (i*37+11)%100 }}vw {{ (i*53+7)%78 }}vh 0 0 #fff{{ ',' if not loop.last }}{% endfor %}"></div>
+<div class="stars s2" aria-hidden="true"
+  style="box-shadow:{% for i in range(35) %}{{ (i*61+29)%100 }}vw {{ (i*41+19)%70 }}vh 0 0 #cfd0ff{{ ',' if not loop.last }}{% endfor %}"></div>
+<div class="scene" aria-hidden="true">
+<svg viewBox="0 0 1800 520" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+  <g class="moon"><circle cx="1500" cy="80" r="95" fill="#fff" opacity=".05"/><circle cx="1500" cy="80" r="62" fill="#fff" opacity=".08"/><circle cx="1500" cy="80" r="34" fill="#fff6dc"/></g>
+  <g class="cloud c1" fill="#2b2a70" opacity=".55"><ellipse cx="300" cy="120" rx="120" ry="16"/><ellipse cx="370" cy="108" rx="70" ry="14"/></g>
+  <g class="cloud c2" fill="#2b2a70" opacity=".4"><ellipse cx="900" cy="70" rx="150" ry="14"/><ellipse cx="840" cy="60" rx="80" ry="12"/></g>
+  <g fill="#1a1850">
+    {% for b in [(0,300,130),(140,270,150),(310,290,120),(445,260,110),(920,290,120),(1050,250,110),(1170,300,100),(1290,270,120),(1430,300,130),(1570,260,130)] %}
+    <rect x="{{ b[0] }}" y="{{ b[1] }}" width="{{ b[2] }}" height="{{ 521-b[1] }}"/>{% endfor %}
+  </g>
+  <g fill="#120f3a">
+    {% for b in [(20,240,170),(205,160,140),(360,210,200),(575,130,160),(750,70,160),(925,170,175),(1115,110,150),(1280,220,170),(1465,150,140),(1620,230,150)] %}
+    {% set bi = loop.index0 %}
+    <rect x="{{ b[0] }}" y="{{ b[1] }}" width="{{ b[2] }}" height="{{ 521-b[1] }}"/>
+    {% set top = 50 if bi == 4 else 16 %}
+    {% for r in range(((520-b[1]-top-34)//38)) %}{% for c in range(((b[2]-16)//30)) %}
+      {% set k = (bi*5 + r*3 + c*7) % 5 %}
+      <rect class="w{{ ' hold' if k == 0 else (' blink' if k < 3 else '') }}" x="{{ b[0]+12+c*30 }}" y="{{ b[1]+top+r*38 }}" width="14" height="20" rx="1.5"
+        {% if k in (1,2) %}style="animation-delay:{{ ((bi*7 + r*13 + c*29) % 19) * 0.55 }}s"{% endif %}/>
+    {% endfor %}{% endfor %}
+    {% endfor %}
+    <polygon points="750,70 830,18 910,70"/>
+  </g>
+  <circle cx="830" cy="100" r="17" fill="#ffb23e"/>
+  <line class="hand" x1="830" y1="100" x2="830" y2="88" stroke="#120f3a" stroke-width="2.4" stroke-linecap="round"/>
+  <rect x="0" y="500" width="1800" height="21" fill="#0f0e2e"/>
+</svg>
+</div>

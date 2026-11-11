@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block title %}{{ error.code }}{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>{% if error.code == 403 %}You can’t open this page{% elif error.code == 404 %}Page not found{% else %}Something went wrong{% endif %}</h1><p>{% if error.code == 403 %}This page is only for placement cell staff or the account that owns it.{% elif error.code == 404 %}The page may have been removed or the link is wrong.{% else %}{{ error.description }}{% endif %}</p></div></section>{% endblock %}
+{% block content %}<a class="btn" href="{{ url_for('main.index') }}">Go to home</a>{% endblock %}

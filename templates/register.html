@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block title %}Create account{% endblock %}
+{% block shell %}
+<div class="split">
+<aside class="side">{% include "_scene.html" %}<div class="side-copy"><h2>Start with your CGPA.</h2><p>Create an account and see the jobs you qualify for.</p></div></aside>
+<section class="pane"><div class="narrow">
+<h1>Create student account</h1>
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Full name <input name="name" value="{{ request.form.name }}" required></label>
+  <label>Email <input type="email" name="email" value="{{ request.form.email }}" required></label>
+  <label>Password <input type="password" name="password" minlength="8" required><small>At least 8 characters.</small></label>
+  <div class="two">
+    <label>Roll number <input name="roll_no" value="{{ request.form.roll_no }}" required></label>
+    <label>Department <input name="department" value="{{ request.form.department }}" required></label>
+  </div>
+  <div class="two">
+    <label>CGPA <input type="number" name="cgpa" step="0.01" min="0" max="10" value="{{ request.form.cgpa }}" required></label>
+    <label>Phone <input name="phone" value="{{ request.form.phone }}"></label>
+  </div>
+  <button class="btn" type="submit">Create account</button>
+</form>
+</div></section>
+</div>
+{% endblock %}

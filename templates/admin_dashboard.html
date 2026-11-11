@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block title %}Admin{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>Placement admin</h1><p>Post jobs, review applicants and record outcomes.</p></div></section>{% endblock %}
+{% block content %}
+<section class="stats small">
+  <div><b>{{ jobs|length }}</b> jobs posted</div>
+  <div><b>{{ companies|length }}</b> companies</div>
+  <div><b>{{ total_apps }}</b> applications</div>
+</section>
+<div class="actionbar top-actions">
+  <a class="btn" href="{{ url_for('main.post_job') }}">Post a job</a>
+  <a class="btn ghost" href="{{ url_for('main.add_company') }}">Add a company</a>
+</div>
+<h2>Jobs</h2>
+<div class="list">
+{% for j in jobs %}
+  <div class="row static">
+    <span class="grow"><strong>{{ j.title }}</strong><br><small>{{ j.company.name }}, closes {{ j.deadline.strftime('%d %b %Y') }}{% if not j.is_open %} (closed){% endif %}</small></span>
+    <span class="meta">{{ j.applications|length }} applicants</span>
+    <a class="btn small" href="{{ url_for('main.applicants', job_id=j.id) }}">Applicants</a>
+    <a class="btn small ghost" href="{{ url_for('main.edit_job', job_id=j.id) }}">Edit</a>
+    <form method="post" action="{{ url_for('main.delete_job', job_id=j.id) }}" class="inline" onsubmit="return confirm('Delete this job and all its applications?')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn small danger" type="submit">Delete</button>
+    </form>
+  </div>
+{% else %}<p class="empty">No jobs yet. Post the first one.</p>{% endfor %}
+</div>
+{% endblock %}

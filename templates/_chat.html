@@ -1,0 +1,16 @@
+{% set first = current_user.name.split()[0] if current_user.is_authenticated else '' %}
+<div class="chat" data-endpoint="{{ url_for('main.assistant_chat') }}" data-csrf="{{ csrf_token() }}"
+     data-greeting="{{ 'Hi ' ~ first ~ '! Ask me which open jobs fit your CGPA, how to prepare for an interview, or how to sharpen your CV.' if first else 'Hi! I’m the placement assistant. Ask me about open jobs, interviews or CV tips. Log in and I can tailor answers to your CGPA.' }}">
+  <div class="chat-head"><span class="pulse"></span><b>Placement assistant</b><button type="button" class="chat-clear">Clear</button></div>
+  <div class="chat-log" role="log" aria-live="polite"></div>
+  <div class="chat-chips">
+    <button type="button" class="q">Which jobs can I apply to?</button>
+    <button type="button" class="q">How do I prepare for an interview?</button>
+    <button type="button" class="q">Give me tips for my CV</button>
+  </div>
+  <form class="chat-form" autocomplete="off">
+    <input name="q" maxlength="800" placeholder="Ask about jobs, CVs or interviews" aria-label="Your message">
+    <button class="btn" type="submit">Send</button>
+  </form>
+  <p class="chat-note">AI can make mistakes. Check job details on each job’s page.</p>
+</div>

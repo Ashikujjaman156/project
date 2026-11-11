@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}{{ 'Edit job' if job else 'Post job' }}{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>{{ 'Edit job' if job else 'Post a job' }}</h1><p>Students see this as soon as you save.</p></div></section>{% endblock %}
+{% block content %}
+{% set v = request.form if request.method == 'POST' else (job or {}) %}
+<div class="narrow">
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Company
+    <select name="company_id" required>
+      {% for c in companies %}<option value="{{ c.id }}" {{ 'selected' if (v.company_id|string) == (c.id|string) }}>{{ c.name }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Job title <input name="title" value="{{ v.title or '' }}" required></label>
+  <label>Description <textarea name="description" rows="5">{{ v.description or '' }}</textarea></label>
+  <div class="two">
+    <label>Minimum CGPA <input type="number" step="0.01" min="0" max="10" name="eligibility_cgpa" value="{{ v.eligibility_cgpa if v.eligibility_cgpa is not none else '' }}" required></label>
+    <label>Package (LPA) <input type="number" step="0.1" min="0" name="package_lpa" value="{{ v.package_lpa if v.package_lpa is not none else '' }}" required></label>
+  </div>
+  <div class="two">
+    <label>Location <input name="location" value="{{ v.location or '' }}"></label>
+    <label>Apply by <input type="date" name="deadline" value="{{ v.deadline if v.deadline is string else (v.deadline.isoformat() if v.deadline else '') }}" required></label>
+  </div>
+  <button class="btn" type="submit">{{ 'Save changes' if job else 'Post job' }}</button>
+</form>
+</div>
+{% endblock %}

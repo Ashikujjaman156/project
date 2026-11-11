@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}My applications{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>My applications</h1><p>Every job you’ve applied to and where it stands.</p></div></section>{% endblock %}
+{% block content %}
+<section class="stats small">
+  {% for s in STATUSES %}<div><b>{{ counts[s] }}</b> {{ s|lower }}</div>{% endfor %}
+</section>
+<div class="list">
+{% for a in apps %}
+  <a class="row" href="{{ url_for('main.job_detail', job_id=a.job_id) }}">
+    <span class="grow"><strong>{{ a.job.title }}</strong><br><small>{{ a.job.company.name }}</small></span>
+    <span class="meta">Applied {{ a.applied_on.strftime('%d %b %Y') }}</span>
+    <span class="badge {{ a.status|lower }}">{{ a.status }}</span>
+  </a>
+{% else %}
+  <p class="empty">You haven't applied anywhere yet. <a href="{{ url_for('main.jobs') }}">Browse open jobs</a>.</p>
+{% endfor %}
+</div>
+{% endblock %}

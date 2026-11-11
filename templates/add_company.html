@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block title %}Add company{% endblock %}
+{% block bodyclass %}dark-top{% endblock %}
+{% block pagehead %}<section class="pagehead">{% include "_scene.html" %}<div class="ph-copy"><h1>Add a company</h1><p>Add the company first, then post its jobs.</p></div></section>{% endblock %}
+{% block content %}
+<div class="narrow">
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>Company name <input name="name" value="{{ request.form.name }}" required></label>
+  <label>Website <input type="url" name="website" value="{{ request.form.website }}" placeholder="https://"></label>
+  <label>Description <textarea name="description" rows="4">{{ request.form.description }}</textarea></label>
+  <button class="btn" type="submit">Save company</button>
+</form>
+</div>
+{% endblock %}
